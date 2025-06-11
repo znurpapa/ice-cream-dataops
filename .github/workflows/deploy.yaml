@@ -47,4 +47,4 @@ jobs:
       - name: Build Toolkit Configurations
         run: cdf build --env=${{ matrix.environment }}
       - name: Deploy Toolkit Configurations
-        run: cdf deploy --env=${{ matrix.environment }}
+        run: cdf deploy --env=${{ matrix.environment }} --verbose
