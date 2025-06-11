@@ -2,48 +2,43 @@ workflowExternalId: wf_icapi_data_pipeline
 version: '1'
 workflowDefinition:
   tasks:
-  - externalId: create_asset_hierarchy_task
+  - externalId: create_asset_hierarchy_transformation_task
     type: transformation
     parameters:
       transformation:
         externalId: create_asset_hierarchy
-        
-    name: 'Task One'
+        concurrencyPolicy: waitForCurrent
     retries: 3
     timeout: 3600
     onFailure: abortWorkflow
-
-  - externalId: contextualize_ts_assets_task
+  - externalId: contextualize_ts_assets_transformation_task
     type: transformation
     parameters:
       transformation:
         externalId: contextualize_ts_assets
-  
-    name: 'Task Two'
+        concurrencyPolicy: waitForCurrent
     retries: 3
     timeout: 3600
-    onFailure: abortWorkflow 
+    onFailure: abortWorkflow
     dependsOn:
-      - externalId: create_asset_hierarchy_task
- - externalId: icapi_datapoints_extractor_task
+      - externalId: create_asset_hierarchy_transformation_task
+  - externalId: icapi_datapoints_extractor_task
     type: function
     parameters:
       function:
         externalId: icapi_datapoints_extractor
         data: { "hours": 1 }
-    name: 'Task Three'
     retries: 3
     timeout: 3600
     onFailure: abortWorkflow
     dependsOn:
-      - externalId: contextualize_ts_assets_task
-  - externalId: oee_timeseries_task
+      - externalId: contextualize_ts_assets_transformation_task
+  - externalId: oee_timeseries_extractor_task
     type: function
     parameters:
       function:
         externalId: oee_timeseries
         data: { "hours": 1 }
-    name: 'Task Four'
     retries: 3
     timeout: 3600
     onFailure: abortWorkflow
